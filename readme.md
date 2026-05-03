@@ -37,7 +37,7 @@ strace -f -e trace=%file,%network,%process curl {url} | sh 2>trace.log
 ```
 
 
-
+--verbose=all --no-abbrev --string-limit=200
 
 
 strace -f -e trace=%file,%network,%process ls 2>trace.log
