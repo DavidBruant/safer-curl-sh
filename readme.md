@@ -63,8 +63,7 @@ strace strace -f -e trace=%file,%network,%process ls 2>trace.log
   - [x] installer lurk
   - [x] produire des fichiers json à partir de lurk
 - [ ] Afficher une version de rapport strace qui aide à prendre une décision sur si on veut executer un truc ou pas
-  - [-] Fichiers ouverts/touchés/lus
-    = trouver l'argument pertinent par syscall
+  - [x] Fichiers ouverts/touchés/lus
   - [ ] Fichiers sur lesquels il y a eu une écriture
     - [ ] suivre quel fd correspond à quel fichier
   - [ ] adresses IP contactées
