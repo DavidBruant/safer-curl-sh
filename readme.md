@@ -2,9 +2,16 @@
 
 ## Usage
 
+`pnpm start`
+
+
+
+
 pnpx url-to
 
 npx
+
+
 
 
 open a shell with bwrap
@@ -50,10 +57,29 @@ strace strace -f -e trace=%file,%network,%process ls 2>trace.log
 
 ## Prochaines étapes
 
-- [ ] récupérer la trace d'un process lancé dans bwrap + strace
-- [ ] la parser pour avoir une version structurée de l'activité
-    s'aider de https://github.com/dannykopping/b3
-- [ ] Afficher une version agréable de rapport strace
+### V1
+
+- [ ] Afficher une version de rapport strace qui aide à prendre une décision sur si on veut executer un truc ou pas
+  - [ ] Fichiers ouverts/touchés/lus
+  - [ ] Fichiers sur lesquels il y a eu une écriture
+  - [ ] adresses IP contactées
+  - [ ] commandes appelées
+  - [ ] syscalls non reconnus
+  - [ ] embed b3 parce que j'ai dû corriger la grammaire 
+- [ ] lancer le process dans bwrap et produire le rapport de syscalls dans un fichier tmp bindé 
+
+
+
+### Après
+
+- [ ] afficher les noms de domaine contactés
+- [ ] empoisonner certains syscall ?
+- [ ] réécrire la production du rapport en Rust en se basant sur sys/ptrace ?
+ou ptèt utiliser https://github.com/JakWai01/lurk
+- [ ] utiliser autre chose que bwrap ?
+
+
+
 
 ### situation réelles
 
