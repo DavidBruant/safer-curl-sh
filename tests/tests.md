@@ -1,10 +1,10 @@
 # Tests
 
 ```
-strace -f -e trace=%file,%network,%process,%desc,%ipc ls 2>ls.log
+lurk --json --file ls.lurk.log -f -e trace=%file,%network,%process,%desc,%ipc ls
 ```
 
 ```
-strace -f -e trace=%file,%network,%process,%desc,%ipc tests/write.sh 2>write.log
+lurk --json --file write.lurk.log -f -e trace=%file,%network,%process,%desc,%ipc tests/write.sh
 ```
 

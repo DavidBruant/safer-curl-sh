@@ -3,12 +3,9 @@ import readline from 'readline'
 import { createReadStream } from 'fs'
 import { join } from 'path'
 
-import parser from 'b3-strace-parser/lib/parser.js'
-import errors from 'b3-strace-parser/lib/errors.js'
-
 // based on TF flag in https://github.com/strace/strace/blob/master/src/linux/64/syscallent.h
 
-const fileSyscalls = new Set([
+const fileSyscallsNames = new Set([
     "lsetxattr",
     "getxattr",
     "lgetxattr",
@@ -53,12 +50,8 @@ const fileSyscalls = new Set([
 ])
 
 
-
-//parser.initialize({trace: true});
-parser.initialize();
-
 const rl = readline.createInterface({
-    input: createReadStream(join('./write.log')),
+    input: createReadStream(join('./write.lurk.log')),
     output: process.stdout,
     terminal: false
 });
@@ -71,20 +64,10 @@ const lines = []
  */
 function parseLine(line) {
     try {
-        let parsed = parser.parseLine(line);
+        let parsed = JSON.parse(line)
         lines.push(parsed)
     } catch (e) {
-        switch (true) {
-            case e instanceof errors.UnfinishedSyscallException:
-                console.warn('Encountered partial syscall, skipping: ' + line);
-                // suppress
-                return;
-        }
-
-
-        console.error('[PARSE ERROR]', e);
-        console.error('Exiting due to stopOnFail argument');
-        process.exit(1);
+        // ignore line
     }
 }
 
@@ -95,9 +78,9 @@ rl.on('line', parseLine);
 rl.on('close', c => {
     console.log('Number of lines:', lines.length)
 
-    const openatSyscalls = lines.filter(l => l.type === 'SYSCALL' && fileSyscalls.has(l.syscall))
-    const filesOpenat = new Set(openatSyscalls.map(l => l.args[1]))
+    const fileSyscalls = lines.filter(l => l.type === 'SYSCALL' && fileSyscallsNames.has(l.syscall))
+    const filesNames = new Set(fileSyscalls.map(l => l.args[1]))
     console.log('Files accessed via a file-related syscall:')
-    console.log([...filesOpenat].join('\n'))
+    console.log([...filesNames].join('\n'))
 })
 

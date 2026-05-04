@@ -59,15 +59,20 @@ strace strace -f -e trace=%file,%network,%process ls 2>trace.log
 
 ### V1
 
+- [ ] se baser sur lurk
+  - [x] installer lurk
+  - [x] produire des fichiers json à partir de lurk
 - [ ] Afficher une version de rapport strace qui aide à prendre une décision sur si on veut executer un truc ou pas
-  - [ ] Fichiers ouverts/touchés/lus
+  - [-] Fichiers ouverts/touchés/lus
+    = trouver l'argument pertinent par syscall
   - [ ] Fichiers sur lesquels il y a eu une écriture
+    - [ ] suivre quel fd correspond à quel fichier
   - [ ] adresses IP contactées
   - [ ] commandes appelées
   - [ ] syscalls non reconnus
   - [ ] embed b3 parce que j'ai dû corriger la grammaire 
 - [ ] lancer le process dans bwrap et produire le rapport de syscalls dans un fichier tmp bindé 
-
+- [ ] Mettre dans le readme d'installer lurk ?
 
 
 ### Après
@@ -75,7 +80,6 @@ strace strace -f -e trace=%file,%network,%process ls 2>trace.log
 - [ ] afficher les noms de domaine contactés
 - [ ] empoisonner certains syscall ?
 - [ ] réécrire la production du rapport en Rust en se basant sur sys/ptrace ?
-ou ptèt utiliser https://github.com/JakWai01/lurk
 - [ ] utiliser autre chose que bwrap ?
 
 

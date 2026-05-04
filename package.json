@@ -11,8 +11,5 @@
   "keywords": [],
   "author": "",
   "license": "CC0-1.0",
-  "packageManager": "pnpm@10.33.2",
-  "dependencies": {
-    "b3-strace-parser": "github:dannykopping/b3#0.3.0"
-  }
+  "packageManager": "pnpm@10.33.2"
 }
