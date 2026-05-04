@@ -88,6 +88,13 @@ function parseLine(line) {
 // -100 is dirfd special value for AT_FDCWD
 // https://github.com/torvalds/linux/blob/c7e4e4d5f7dc2daa439303d1b5bf6bdfaa249f49/include/uapi/linux/fcntl.h#L106
 
+
+/*
+options for file open
+
+https://github.com/torvalds/linux/blob/c7e4e4d5f7dc2daa439303d1b5bf6bdfaa249f49/include/uapi/asm-generic/fcntl.h#L18-L95
+*/
+
 /**
  * 
  * @param {LurkSyscallLine} l 
@@ -116,6 +123,7 @@ rl.on('close', c => {
     console.log('Number of lines:', lines.length)
 
     const fileSyscalls = lines.filter(l => l.type === 'SYSCALL' && fileSyscallsNames.has(l.syscall))
+    console.log('fileSyscalls', fileSyscalls)
     const filesNames = new Set(fileSyscalls.map(findFilenameArg))
     console.log('Files accessed via a file-related syscall:')
     console.log([...filesNames].join('\n'))
