@@ -58,7 +58,7 @@ const fileSyscalls = new Set([
 parser.initialize();
 
 const rl = readline.createInterface({
-    input: createReadStream(join('./trace.log')),
+    input: createReadStream(join('./write.log')),
     output: process.stdout,
     terminal: false
 });
