@@ -6,4 +6,37 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    dependencies:
+      '@lezer/lr':
+        specifier: ^1.4.10
+        version: 1.4.10
+    devDependencies:
+      '@lezer/generator':
+        specifier: ^1.8.0
+        version: 1.8.0
+
+packages:
+
+  '@lezer/common@1.5.2':
+    resolution: {integrity: sha512-sxQE460fPZyU3sdc8lafxiPwJHBzZRy/udNFynGQky1SePYBdhkBl1kOagA9uT3pxR8K09bOrmTUqA9wb/PjSQ==}
+
+  '@lezer/generator@1.8.0':
+    resolution: {integrity: sha512-/SF4EDWowPqV1jOgoGSGTIFsE7Ezdr7ZYxyihl5eMKVO5tlnpIhFcDavgm1hHY5GEonoOAEnJ0CU0x+tvuAuUg==}
+    hasBin: true
+
+  '@lezer/lr@1.4.10':
+    resolution: {integrity: sha512-rnCpTIBafOx4mRp43xOxDJbFipJm/c0cia/V5TiGlhmMa+wsSdoGmUN3w5Bqrks/09Q/D4tNAmWaT8p6NRi77A==}
+
+snapshots:
+
+  '@lezer/common@1.5.2': {}
+
+  '@lezer/generator@1.8.0':
+    dependencies:
+      '@lezer/common': 1.5.2
+      '@lezer/lr': 1.4.10
+
+  '@lezer/lr@1.4.10':
+    dependencies:
+      '@lezer/common': 1.5.2

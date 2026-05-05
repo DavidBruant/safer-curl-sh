@@ -59,6 +59,8 @@ strace strace -f -e trace=%file,%network,%process ls 2>trace.log
 
 ### V1
 
+- [ ] se baser sur strace
+  - [ ] créer un parser correct basé sur lezer
 - [ ] Afficher une version de rapport strace qui aide à prendre une décision sur si on veut executer un truc ou pas
   - [x] Fichiers ouverts/touchés/lus
   - [ ] Fichiers sur lesquels il y a eu une écriture
@@ -70,6 +72,14 @@ strace strace -f -e trace=%file,%network,%process ls 2>trace.log
   - [ ] embed b3 parce que j'ai dû corriger la grammaire 
 - [ ] lancer le process dans bwrap et produire le rapport de syscalls dans un fichier tmp bindé 
 - [ ] Mettre dans le readme d'installer lurk ?
+
+
+## apprentissages 
+
+- strace, c'est relou parce que ça se parse pas bien
+- b3 n'est pas ouf https://github.com/dannykopping/b3 parce que j'ai eu des erreurs de parsing sur des cas simples (ls, cat)
+- lurk https://github.com/JakWai01/lurk ne comprend pas les fd du syscall `pipe`
+
 
 
 ### Après

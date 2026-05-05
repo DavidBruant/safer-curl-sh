@@ -1,0 +1,179 @@
+@top Strace { line* }
+
+@skip { spaces }
+
+line {
+    SyscallLine |
+    UnfinishedLine |
+    ResumedLine |
+    ExitedLine |
+    SignalLine
+}
+
+// ── Normal syscall: PID name(args) = retval ───────────────────────────────
+
+SyscallLine {
+    Pid SyscallName "(" ArgList? ")" "=" ReturnValue newline
+}
+
+// ── Interrupted: PID name(args <unfinished ...> ───────────────────────────
+
+UnfinishedLine {
+    Pid SyscallName "(" ArgList? unfinished newline
+}
+
+// ── Resumed: PID <... name resumed>, args) = retval ──────────────────────
+
+ResumedLine {
+    Pid resumed ArgList? ")" "=" ReturnValue newline
+}
+
+// ── +++ exited with N +++ ─────────────────────────────────────────────────
+
+ExitedLine {
+    Pid ExitMarker newline
+}
+
+// ── --- SIGNAL {...} --- ──────────────────────────────────────────────────
+
+SignalLine {
+    Pid SignalMarker newline
+}
+
+// ── Return value ──────────────────────────────────────────────────────────
+
+ReturnValue {
+    ErrorReturn { negint ErrorCode ErrorMessage? } |
+//    StructValue |
+    HexValue |
+    Integer |
+    "?"
+}
+
+ErrorCode { Identifier }
+
+ErrorMessage { "(" messageText ")" }
+
+// ── Argument list ─────────────────────────────────────────────────────────
+
+ArgList { arg ("," arg)* }
+
+arg {
+    NamedArg { Identifier "=" value } |
+    value
+}
+
+value {
+    FlagExpr { flagAtom ("|" flagAtom)+ } |
+    flagAtom
+}
+
+flagAtom {
+//    StructValue |
+    ArrayValue |
+    StringValue |
+    HexValue |
+    Integer |
+    negint |
+    Identifier |
+    NullPtr
+}
+
+// ── Compound values ───────────────────────────────────────────────────────
+
+/*
+StructValue { "{" structField ("," structField)* ","? "}" }
+
+structField {
+    NamedField { fieldName "=" fieldValue } |
+    fieldValue
+}
+
+fieldName { Identifier | bracketedName }
+
+bracketedName { "[" Identifier "]" }
+
+fieldValue {
+    TimestampValue { integer "/*" timestampText "*\/" } |
+    StructValue |
+    ArrayValue |
+    FlagExpr { flagAtom ("|" flagAtom)+ } |
+    MakedevValue |
+    HexValue |
+    Integer |
+    negint |
+    Identifier |
+    StringValue
+}
+
+MakedevValue { "makedev" "(" hexOrInt "," hexOrInt ")" }
+
+hexOrInt { HexValue | Integer }
+
+*/
+
+ArrayValue { "[" (arrayItem ("," arrayItem)* ","?)? "]" }
+
+arrayItem {
+//    StructValue |
+    FlagExpr { flagAtom ("|" flagAtom)+ } |
+    NamedArg { Identifier "=" value } |
+    HexValue |
+    Integer |
+    negint |
+    Identifier |
+    StringValue
+}
+
+// ── String ────────────────────────────────────────────────────────────────
+
+StringValue { quotedString Truncated? }
+
+Truncated { "..." }
+
+// ── Inline comments ───────────────────────────────────────────────────────
+
+// ── Tokens ───────────────────────────────────────────────────────────────
+
+@tokens {
+    spaces { $[ \t]+ }
+    newline { "\n" | "\r\n" }
+
+    Pid { @digit+ }
+
+    SyscallName { @asciiLetter ($[a-zA-Z0-9_])* }
+
+    unfinished { "<unfinished ...>" }
+
+    resumed { "<..." spaces @asciiLetter ($[a-zA-Z0-9_])* spaces "resumed>" }
+
+    ExitMarker { "+++" $[^\n]+ "+++" }
+
+    SignalMarker { "---" spaces @asciiLetter ($[A-Z0-9_])* spaces "{" $[^}]* "}" spaces "---" }
+
+    HexValue { "0x" $[0-9a-fA-F]+ }
+
+    Integer { @digit+ }
+    negint { "-" @digit+ }
+
+    NullPtr { "NULL" }
+
+    Identifier { @asciiLetter ($[a-zA-Z0-9_])* }
+
+    quotedString {
+        '"' (![\\\n"] | "\\" _)* '"'? |
+        "'" (![\\\n'] | "\\" _)* "'"?
+    }
+
+    messageText { $[^\n)]+ }
+
+//    TrailingComment { $[ \t]+ $[^\n]+ }
+
+    @precedence { NullPtr, Identifier }
+    @precedence { Integer, Identifier }
+    @precedence { HexValue, Integer }
+    @precedence { ExitMarker, SignalMarker }
+    @precedence { unfinished, resumed }
+}
+
+@detectDelim
