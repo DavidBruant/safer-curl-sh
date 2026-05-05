@@ -12,6 +12,7 @@ import { join } from 'path'
  * @prop {string} syscall
  * @prop {(number | string)[]} args 
  * @prop {any} [success]
+ * @prop {any} [result]
  * @prop {any} [error] 
  * @prop {number} duration  
  * 
@@ -92,7 +93,7 @@ function parseLine(line) {
 /*
 options for file open
 
-https://github.com/torvalds/linux/blob/c7e4e4d5f7dc2daa439303d1b5bf6bdfaa249f49/include/uapi/asm-generic/fcntl.h#L18-L95
+https://github.com/torvalds/linux/blob/a293ec25d59dd96309058c70df5a4dd0f889a1e4/include/uapi/asm-generic/fcntl.h#L18-L96
 */
 
 /**
@@ -116,10 +117,7 @@ function findFilenameArg(l){
 }
 
 
-
-rl.on('line', parseLine);
-
-rl.on('close', c => {
+function afficherRésumé(){
     console.log('Number of lines:', lines.length)
 
     const fileSyscalls = lines.filter(l => l.type === 'SYSCALL' && fileSyscallsNames.has(l.syscall))
@@ -127,5 +125,21 @@ rl.on('close', c => {
     const filesNames = new Set(fileSyscalls.map(findFilenameArg))
     console.log('Files accessed via a file-related syscall:')
     console.log([...filesNames].join('\n'))
+}
+
+
+function afficherCleanLines(){
+    for(const {syscall, args, success, error} of lines){
+        if(syscall === 'openat')
+        console.log(`${syscall}\t(${args.join(', ')}) = ${success || error}`)
+    }
+}
+
+
+
+rl.on('line', parseLine);
+
+rl.on('close', c => {
+    afficherCleanLines()
 })
 

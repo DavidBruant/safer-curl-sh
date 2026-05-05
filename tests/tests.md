@@ -1,10 +1,9 @@
 # Tests
 
 ```
-lurk --json --file ls.lurk.log -f -e trace=%file,%network,%process,%desc,%ipc ls
+strace -o ls.log --no-abbrev --follow-forks --string-limit=100 -e trace=%file,%network,%process,%desc,%ipc ls
 ```
 
 ```
-lurk --json --file write.lurk.log -f -e trace=%file,%network,%process,%desc,%ipc tests/write.sh
+strace -o write.log --no-abbrev --follow-forks --string-limit=100 -e trace=%file,%network,%process,%desc,%ipc tests/write.sh
 ```
-
